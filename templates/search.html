@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Search Results | GCOEAvidNotes</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { darkMode: 'class' }
+  </script>
+</head>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
+
+  <header class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow-md fixed top-0 left-0 w-full z-20">
+    <div class="max-w-7xl mx-auto flex items-center justify-between p-4">
+      <a href="index.html" class="text-2xl font-bold text-blue-600 dark:text-blue-400">GCOEAvidNotes</a>
+      <div class="flex items-center space-x-4">
+        <nav class="hidden md:flex space-x-8 font-medium">
+          <a href="notes.html" class="hover:text-blue-600 dark:hover:text-blue-400">Notes</a>
+          <a href="videos.html" class="hover:text-blue-600 dark:hover:text-blue-400">Videos</a>
+          <a href="pyqs.html" class="hover:text-blue-600 dark:hover:text-blue-400">PYQs</a>
+          <a href="about.html" class="hover:text-blue-600 dark:hover:text-blue-400">About</a>
+        </nav>
+        <button id="theme-toggle" class="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-lg">🌙</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="pt-24 min-h-screen">
+    <div class="max-w-7xl mx-auto px-4 py-8">
+      
+      <section class="mb-12">
+        <h1 class="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white">
+          Search Results for "<span id="search-query-display" class="text-blue-600"></span>"
+        </h1>
+      </section>
+
+      <div id="results-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        </div>
+      
+      <div id="no-results" class="hidden text-center py-16">
+          <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200">No Results Found</h2>
+          <p class="text-gray-600 dark:text-gray-400 mt-2">Try searching for a different keyword or check your spelling.</p>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="bg-gray-800 dark:bg-gray-900/50 text-gray-300 dark:text-gray-400 mt-16">
+    <div class="max-w-7xl mx-auto px-4 py-8"><p>&copy; 2025 GCOEAvidNotes. All rights reserved.</p></div>
+  </footer>
+  
+  <script src="database.js"></script>
+
+  <script>
+    const resultsContainer = document.getElementById('results-container');
+    const noResultsMessage = document.getElementById('no-results');
+    const searchQueryDisplay = document.getElementById('search-query-display');
+    const themeToggle = document.getElementById('theme-toggle'); // For dark mode
+    const htmlEl = document.documentElement; // For dark mode
+
+    // Get search query from URL
+    const params = new URLSearchParams(window.location.search);
+    const query = params.get('query');
+
+    if (query) {
+      searchQueryDisplay.textContent = query;
+      const queryLower = query.toLowerCase();
+
+      // Filter the content from database.js
+      const results = allContent.filter(item => {
+        const titleMatch = item.title.toLowerCase().includes(queryLower);
+        const descriptionMatch = item.description.toLowerCase().includes(queryLower);
+        const tagsMatch = item.tags.some(tag => tag.toLowerCase().includes(queryLower));
+        return titleMatch || descriptionMatch || tagsMatch;
+      });
+
+      if (results.length > 0) {
+        results.forEach(result => {
+          // Define category color
+          let categoryColor = 'text-gray-500';
+          if (result.category === 'Note') categoryColor = 'text-blue-500';
+          if (result.category === 'Video') categoryColor = 'text-green-500';
+          if (result.category === 'PYQ') categoryColor = 'text-red-500';
+
+          const resultCard = `
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden flex flex-col">
+              <div class="p-6 flex-grow">
+                <span class="text-xs font-semibold uppercase ${categoryColor}">${result.category}</span>
+                <h3 class="text-xl font-bold mt-2 mb-2">${result.title}</h3>
+                <p class="text-gray-600 dark:text-gray-400 text-sm">${result.description}</p>
+              </div>
+              <div class="p-6 bg-gray-50 dark:bg-gray-700/50 border-t dark:border-gray-700">
+                <a href="${result.url}" class="w-full text-center block bg-blue-600 text-white px-5 py-2.5 rounded-lg shadow hover:bg-blue-700">View Resource</a>
+              </div>
+            </div>
+          `;
+          resultsContainer.innerHTML += resultCard;
+        });
+      } else {
+        noResultsMessage.classList.remove('hidden');
+      }
+    } else {
+      noResultsMessage.classList.remove('hidden');
+      document.getElementById('search-query-display').textContent = '...';
+    }
+
+    // --- Dark Mode Toggle Logic (copied for consistency) ---
+    if(localStorage.theme==='dark'||(!('theme'in localStorage)&&window.matchMedia('(prefers-color-scheme: dark)').matches)){htmlEl.classList.add('dark');themeToggle.textContent='☀️';}else{htmlEl.classList.remove('dark');themeToggle.textContent='🌙';}
+    themeToggle.addEventListener('click',()=>{if(htmlEl.classList.contains('dark')){htmlEl.classList.remove('dark');localStorage.theme='light';themeToggle.textContent='🌙';}else{htmlEl.classList.add('dark');localStorage.theme='dark';themeToggle.textContent='☀️';}});
+  </script>
+</body>
+</html>
