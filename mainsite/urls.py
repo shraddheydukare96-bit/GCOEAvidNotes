@@ -10,4 +10,5 @@ urlpatterns = [
     path('pyqs/', views.pyqs_page, name='pyqs'),
     path('about/', views.about_page, name='about'),
     path('search/', views.search_page, name='search'),
+    
 ]
