@@ -13,19 +13,34 @@
 
   <header class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow-md fixed top-0 left-0 w-full z-20">
     <div class="max-w-7xl mx-auto flex items-center justify-between p-4">
-      <a href="index.html" class="text-2xl font-bold text-blue-600 dark:text-blue-400">GCOEAvidNotes</a>
+      <a href="{% url 'home' %}" class="text-2xl font-bold text-blue-600 dark:text-blue-400">GCOEAvidNotes</a>
       <div class="flex items-center space-x-4">
-        <a href="{% url 'home' %}" class="text-2xl font-bold ...">GCOEAvidNotes</a>
-
-<nav class="hidden md:flex space-x-8 font-medium">
-  <a href="{% url 'notes' %}" class="text-blue-600 dark:text-blue-400 font-semibold">Notes</a> <a href="{% url 'videos' %}" class="hover:text-blue-600 ...">Videos</a>
-  <a href="{% url 'pyqs' %}" class="hover:text-blue-600 ...">PYQs</a>
-  <a href="{% url 'about' %}" class="hover:text-blue-600 ...">About</a>
-</nav>
+        <nav class="hidden md:flex space-x-8 font-medium">
+          <a href="{% url 'notes' %}" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Notes</a>
+          <a href="{% url 'videos' %}" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Videos</a>
+          <a href="{% url 'pyqs' %}" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">PYQs</a>
+          <a href="{% url 'about' %}" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">About</a>
+        </nav>
         <button id="theme-toggle" class="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-lg">🌙</button>
+        <button id="menu-btn" class="md:hidden"><svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg></button>
       </div>
     </div>
   </header>
+
+  <aside id="sidebar" class="fixed top-0 left-0 w-64 h-full bg-white dark:bg-gray-800 shadow-lg transform -translate-x-full transition-transform duration-300 md:hidden z-30">
+      <div class="p-4 flex justify-between items-center border-b dark:border-gray-700">
+          <h2 class="text-lg font-semibold text-blue-600 dark:text-blue-400">Menu</h2>
+          <button id="close-btn" class="text-gray-700 dark:text-gray-200 text-2xl">✕</button>
+      </div>
+      <nav class="flex flex-col p-4 space-y-4 text-lg">
+          <a href="{% url 'home' %}" class="hover:text-blue-600 dark:hover:text-blue-400">Home</a>
+          <a href="{% url 'notes' %}" class="hover:text-blue-600 dark:hover:text-blue-400">Notes</a>
+          <a href="{% url 'videos' %}" class="hover:text-blue-600 dark:hover:text-blue-400">Videos</a>
+          <a href="{% url 'pyqs' %}" class="hover:text-blue-600 dark:hover:text-blue-400">PYQs</a>
+          <a href="{% url 'about' %}" class="hover:text-blue-600 dark:hover:text-blue-400">About</a>
+      </nav>
+  </aside>
+  <div id="overlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-20"></div>
 
   <main class="pt-24 min-h-screen">
     <div class="max-w-7xl mx-auto px-4 py-8">
@@ -51,24 +66,21 @@
     <div class="max-w-7xl mx-auto px-4 py-8"><p>&copy; 2025 GCOEAvidNotes. All rights reserved.</p></div>
   </footer>
   
-  <script src="database.js"></script>
-
-  <script>
+  <script src="/static/database.js"></script> <script>
     const resultsContainer = document.getElementById('results-container');
     const noResultsMessage = document.getElementById('no-results');
     const searchQueryDisplay = document.getElementById('search-query-display');
-    const themeToggle = document.getElementById('theme-toggle'); // For dark mode
-    const htmlEl = document.documentElement; // For dark mode
+    const themeToggle = document.getElementById('theme-toggle');
+    const htmlEl = document.documentElement;
 
-    // Get search query from URL
     const params = new URLSearchParams(window.location.search);
     const query = params.get('query');
 
     if (query) {
       searchQueryDisplay.textContent = query;
       const queryLower = query.toLowerCase();
-
-      // Filter the content from database.js
+      
+      // 'allContent' is loaded from database.js
       const results = allContent.filter(item => {
         const titleMatch = item.title.toLowerCase().includes(queryLower);
         const descriptionMatch = item.description.toLowerCase().includes(queryLower);
@@ -78,7 +90,6 @@
 
       if (results.length > 0) {
         results.forEach(result => {
-          // Define category color
           let categoryColor = 'text-gray-500';
           if (result.category === 'Note') categoryColor = 'text-blue-500';
           if (result.category === 'Video') categoryColor = 'text-green-500';
@@ -106,8 +117,8 @@
       document.getElementById('search-query-display').textContent = '...';
     }
 
-    // --- Dark Mode Toggle Logic (copied for consistency) ---
-    if(localStorage.theme==='dark'||(!('theme'in localStorage)&&window.matchMedia('(prefers-color-scheme: dark)').matches)){htmlEl.classList.add('dark');themeToggle.textContent='☀️';}else{htmlEl.classList.remove('dark');themeToggle.textContent='🌙';}
+    // --- Sidebar and Dark Mode Logic ---
+    const menuBtn = document.getElementById('menu-btn'),closeBtn = document.getElementById('close-btn'),sidebar = document.getElementById('sidebar'),overlay = document.getElementById('overlay');menuBtn.addEventListener('click', () => {sidebar.classList.remove('-translate-x-full');overlay.classList.remove('hidden');});const closeSidebar = () => {sidebar.classList.add('-translate-x-full');overlay.classList.add('hidden');};closeBtn.addEventListener('click', closeSidebar);overlay.addEventListener('click', closeSidebar);if(localStorage.theme==='dark'||(!('theme'in localStorage)&&window.matchMedia('(prefers-color-scheme: dark)').matches)){htmlEl.classList.add('dark');themeToggle.textContent='☀️';}else{htmlEl.classList.remove('dark');themeToggle.textContent='🌙';}
     themeToggle.addEventListener('click',()=>{if(htmlEl.classList.contains('dark')){htmlEl.classList.remove('dark');localStorage.theme='light';themeToggle.textContent='🌙';}else{htmlEl.classList.add('dark');localStorage.theme='dark';themeToggle.textContent='☀️';}});
   </script>
 </body>
