@@ -37,3 +37,4 @@ def search_page(request):
     This view renders the search results page (search.html).
     """
     return render(request, 'mainsite/search.html')
+
