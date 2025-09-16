@@ -6,24 +6,21 @@
   <title>GCOEAvidNotes | Notes, Videos & PYQs</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
-    // Enable Tailwind dark mode
-    tailwind.config = {
-      darkMode: 'class'
-    }
+    tailwind.config = { darkMode: 'class' }
   </script>
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
 
   <header class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow-md fixed top-0 left-0 w-full z-20">
     <div class="max-w-7xl mx-auto flex items-center justify-between p-4">
-      <h1 class="text-2xl font-bold text-blue-600 dark:text-blue-400">GCOEAvidNotes</h1>
+      <a href="{% url 'home' %}" class="text-2xl font-bold text-blue-600 dark:text-blue-400">GCOEAvidNotes</a>
       <div class="flex items-center space-x-4">
-       <nav class="hidden md:flex space-x-8 font-medium">
-  <a href="{% url 'notes' %}" class="hover:text-blue-600 ...">Notes</a>
-  <a href="{% url 'videos' %}" class="hover:text-blue-600 ...">Videos</a>
-  <a href="{% url 'pyqs' %}" class="hover:text-blue-600 ...">PYQs</a>
-  <a href="{% url 'about' %}" class="hover:text-blue-600 ...">About</a>
-</nav>
+        <nav class="hidden md:flex space-x-8 font-medium">
+          <a href="{% url 'notes' %}" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Notes</a>
+          <a href="{% url 'videos' %}" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Videos</a>
+          <a href="{% url 'pyqs' %}" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">PYQs</a>
+          <a href="{% url 'about' %}" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">About</a>
+        </nav>
         <button id="theme-toggle" class="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 text-lg">
           🌙
         </button>
@@ -41,15 +38,15 @@
       <h2 class="text-lg font-semibold text-blue-600 dark:text-blue-400">Menu</h2>
       <button id="close-btn" class="text-gray-700 dark:text-gray-200 text-2xl">✕</button>
     </div>
-  <nav class="hidden md:flex space-x-8 font-medium">
-  <a href="notes.html" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Notes</a>
-  <a href="videos.html" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Videos</a>
-  <a href="pyqs.html" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">PYQs</a>
-  <a href="about.html" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">About</a>
-  <a href="search.html" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">SearchS</a>
-</nav>
+    <nav class="flex flex-col p-4 space-y-4 text-lg">
+      <a href="{% url 'home' %}" class="hover:text-blue-600 dark:hover:text-blue-400">Home</a>
+      <a href="{% url 'notes' %}" class="hover:text-blue-600 dark:hover:text-blue-400">Notes</a>
+      <a href="{% url 'videos' %}" class="hover:text-blue-600 dark:hover:text-blue-400">Videos</a>
+      <a href="{% url 'pyqs' %}" class="hover:text-blue-600 dark:hover:text-blue-400">PYQs</a>
+      <a href="{% url 'about' %}" class="hover:text-blue-600 dark:hover:text-blue-400">About</a>
+    </nav>
   </aside>
-
+  
   <div id="overlay" class="hidden fixed inset-0 bg-black bg-opacity-50 z-20"></div>
 
   <main class="pt-24">
@@ -63,8 +60,8 @@
         </p>
         <div class="max-w-2xl mx-auto">
           <div class="relative">
-            <input type="search" placeholder="Search for a subject, topic, or year..." class="w-full p-4 pr-20 rounded-full bg-gray-100 dark:bg-gray-700 border-2 border-transparent focus:border-blue-500 focus:ring-blue-500 transition">
-            <button class="absolute top-1/2 right-2 -translate-y-1/2 bg-blue-600 text-white px-6 py-2.5 rounded-full shadow hover:bg-blue-700 transition">
+            <input type="search" id="search-input" placeholder="Search for a subject, topic, or year..." class="w-full p-4 pr-20 rounded-full bg-gray-100 dark:bg-gray-700 border-2 border-transparent focus:border-blue-500 focus:ring-blue-500 transition">
+            <button id="search-button" class="absolute top-1/2 right-2 -translate-y-1/2 bg-blue-600 text-white px-6 py-2.5 rounded-full shadow hover:bg-blue-700 transition">
               Search
             </button>
           </div>
@@ -75,21 +72,21 @@
     <section class="py-16">
       <div class="max-w-7xl mx-auto px-4">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <a href="#" class="block bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
+          <a href="{% url 'notes' %}" class="block bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
             <div class="text-blue-500 mb-4">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
             </div>
             <h3 class="text-2xl font-bold mb-2">Class Notes</h3>
             <p class="text-gray-600 dark:text-gray-400">Find comprehensive, subject-wise notes shared by faculty and top students.</p>
           </a>
-          <a href="#" class="block bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
+          <a href="{% url 'videos' %}" class="block bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
             <div class="text-blue-500 mb-4">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
             </div>
             <h3 class="text-2xl font-bold mb-2">Video Lectures</h3>
             <p class="text-gray-600 dark:text-gray-400">Curated video playlists to help you understand complex topics easily.</p>
           </a>
-          <a href="#" class="block bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
+          <a href="{% url 'pyqs' %}" class="block bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg hover:shadow-xl hover:-translate-y-2 transition-all duration-300">
             <div class="text-blue-500 mb-4">
               <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
             </div>
@@ -143,7 +140,7 @@
       <div class="max-w-4xl mx-auto text-center px-4">
           <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">Join the Community</h2>
           <p class="text-lg text-gray-600 dark:text-gray-300 mb-8">
-            Help fellow students by sharing your notes and study material. Together, we learn better.
+            Help other students by sharing your notes and study material. Together, we learn better.
           </p>
           <a href="#" class="bg-blue-600 text-white px-8 py-4 rounded-xl shadow-lg hover:bg-blue-700 dark:hover:bg-blue-500 transition-transform hover:scale-105 inline-block">
             Contribute Now
@@ -201,6 +198,22 @@
         htmlEl.classList.add('dark');
         localStorage.theme = 'dark';
         themeToggle.textContent = '☀️';
+      }
+    });
+
+    // Search Bar Logic
+    const searchInput = document.getElementById('search-input');
+    const searchButton = document.getElementById('search-button');
+    const performSearch = () => {
+      const query = searchInput.value.trim();
+      if (query) {
+        window.location.href = `{% url 'search' %}?query=${encodeURIComponent(query)}`;
+      }
+    };
+    searchButton.addEventListener('click', performSearch);
+    searchInput.addEventListener('keyup', (event) => {
+      if (event.key === 'Enter') {
+        performSearch();
       }
     });
   </script>
